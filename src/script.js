@@ -3,8 +3,11 @@ const form = document.querySelector(`#form`);
 const search = document.querySelector(`#search`);
 const pagesEl = document.querySelector(`.paginate`);
 
-const API_URL =
-  'https://api.themoviedb.org/3/discover/movie?api_key=766ef7fd1f98b23bae29eb3c070c1e60&language=it&page=1';
+console.log(import.meta.env.VITE_API_KEY);
+
+const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${
+  import.meta.env.VITE_API_KEY
+}&language=it&page=1`;
 const IMAGE_PATH = `https://image.tmdb.org/t/p/w300`;
 const SEARCH_URL = API_URL.replace('discover', 'search') + '&query=';
 

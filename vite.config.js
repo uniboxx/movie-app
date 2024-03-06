@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import path from 'path';
+import 'dotenv/config';
 import vitePugPlugin from 'vite-plugin-pug-transformer';
 
 export default defineConfig({
