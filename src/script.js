@@ -1,19 +1,46 @@
 const mainEl = document.querySelector(`#main`);
 const form = document.querySelector(`#form`);
 const search = document.querySelector(`#search`);
-const pagesEl = document.querySelector(`.paginate`);
+const paginate = document.querySelector(`.paginate`);
 const pages = document.querySelectorAll(`.paginate ul li`);
 const prev = document.querySelector(`#prev`);
 const next = document.querySelector(`#next`);
+const controls = document.querySelectorAll(`.button`);
+const menuEls = document.querySelectorAll(`#menu li`);
 
-const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+console.log(urlParams);
+
+let resource = urlParams.get('resource') || 'movie';
+
+const API_URL = `https://api.themoviedb.org/3/discover/${resource}?api_key=${
   import.meta.env.VITE_API_KEY
-}&language=it&page=1`;
+}&language=it&page=1/?resource=movie`;
+
 const IMAGE_PATH = `https://image.tmdb.org/t/p/w300`;
 const SEARCH_URL = API_URL.replace('discover', 'search') + '&query=';
 
-let currentUrl = API_URL;
+console.log(resource);
 let page = 1;
+let pagePlus = page + 1;
+let currentUrl = API_URL;
+let nextUrl = API_URL.replace(/page=\d/, `page=${pagePlus}`);
+
+function displayMsg(text) {
+  mainEl.style.display = 'block';
+  mainEl.innerHTML = '';
+  mainEl.innerHTML = `<h1 style='text-align:center;color: #fff;font-size: 40px;'>${text}</h1>`;
+  paginate.style.display = 'none';
+}
+
+function createPagination() {
+  const paginationEl = document.createElement('li');
+  const anchor = document.createElement('a');
+  anchor.textContent = paginationEl;
+  paginationEl.appendChild(anchor);
+}
 
 function highlight(page) {
   pages.forEach(el => {
@@ -23,37 +50,50 @@ function highlight(page) {
 }
 
 next.addEventListener('click', e => {
-  if (page === 5) return;
   page++;
   goToPage(page);
 });
 
 prev.addEventListener('click', e => {
-  if (page === 1) return;
   page--;
   goToPage(page);
 });
 
 function goToPage(page) {
-  currentUrl = currentUrl.replace(/page=\d+/, `page=${page}`);
-  highlight(page);
-  getMovies(currentUrl);
+  currentUrl = currentUrl
+    .replace(/page=\d+/, `page=${page}`)
+    .replace(/resource=/, `?resource=${resource}`);
+  nextUrl = currentUrl
+    .replace(/page=\d+/, `page=${page + 1}`)
+    .replace(/resource=/, `?resource=${resource}`);
+  // highlight(page);
+  getMedia(currentUrl, nextUrl);
 }
 
 //^ Get initial movies
-getMovies(currentUrl);
+displayMsg('Sto caricando....');
+getMedia(currentUrl, nextUrl);
 
-async function getMovies(url) {
+//^ GET MEDIA
+
+async function getMedia(url, nextUrl) {
   try {
     const res = await fetch(url);
     const data = await res.json();
     const results = data.results;
+    const resPlus = await fetch(nextUrl);
+    const dataPlus = await resPlus.json();
+    const resultsPlus = dataPlus.results;
+    if (!resultsPlus[0]) {
+      next?.setAttribute('disabled', '');
+    }
     if (!results[0]) {
-      mainEl.innerHTML = `<h1 style='color: #fff;font-size: 40px;'>No results found!</h1>`;
+      displayMsg(`Non sono stati trovati risultati!`);
       return;
     }
-    mainEl.innerHTML = '';
     // const movie = results[0];
+    mainEl.innerHTML = '';
+    mainEl.style.display = 'grid';
     results.forEach(movie => {
       const movieEl = document.createElement('div');
       movieEl.classList.add('movie');
@@ -78,7 +118,7 @@ async function getMovies(url) {
       const movieInfoEl = document.createElement('div');
       movieInfoEl.classList.add('movie-info');
       const h3titleEl = document.createElement('h3');
-      h3titleEl.innerText = movie.title;
+      h3titleEl.innerText = movie.title || movie.name;
       movieInfoEl.appendChild(h3titleEl);
       const spanEl = document.createElement('span');
       let rating = (Math.round(movie.vote_average * 10) / 10).toString();
@@ -102,8 +142,13 @@ async function getMovies(url) {
         overviewEl.textContent = 'Nessuna Descrizione!';
       }
       movieEl.appendChild(overviewEl);
+      if (resource === 'movie') Array.from(menuEls)[0].classList.add('high');
+      if (resource === 'tv') menuEls[1].classList.add('high');
+      mainEl.appendChild(movieEl);
 
-      mainEl?.appendChild(movieEl);
+      paginate.style.display = 'flex';
+      if (page > 1) prev.removeAttribute('disabled');
+      else prev.setAttribute('disabled', '');
     });
   } catch (err) {
     console.error(err);
@@ -112,20 +157,22 @@ async function getMovies(url) {
 
 //^ Search listener
 
-form.addEventListener('submit', async e => {
+form.addEventListener('submit', e => {
   e.preventDefault();
   const query = search?.value;
   if (query && query !== '') {
     search.value = '';
+    page = 1;
     currentUrl = `${SEARCH_URL}${query}`;
-    mainEl.innerHTML = '';
-
-    getMovies(currentUrl);
+    console.log(currentUrl);
+    displayMsg(`Ricerca in corso...`);
   }
+  goToPage(page);
 });
 
-pagesEl?.addEventListener('click', e => {
+paginate?.addEventListener('click', e => {
   const pageEl = e.target.closest('LI');
+  // console.log(pageEl);
   if (pageEl) {
     page = +pageEl.textContent;
     goToPage(page);
