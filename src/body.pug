@@ -1,35 +1,37 @@
-.container  
-  
-  header 
-    ul 
-      li: a(href="/") Home
-    form#form 
-      input#search.search(type='text', placeholder='Search')
 
-  main#main 
-    //- .movie 
-    //-   img(src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2luZW1hfGVufDB8fDB8fHww', alt='')
-    //-   .movie-info
-    //-     h3 Movie Title
-    //-     span.green 9.8
-      
-    //-   .overview 
-    //-     h3 Overview 
-    //-     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae repellendus error itaque eveniet reprehenderit natus quibusdam inventore officiis facilis voluptas.
 
-  .paginate 
-    ul 
-      li: a 1
-      li: a 2
-      li: a 3
-      li: a 4
-      li: a 5
-      
+header 
+  ul 
+    li: a(href="/") Home
+  form#form 
+    input#search.search(type='text', placeholder='Search')
 
-  footer 
-    .about
-      p By unibox - 2024
-      .social
-        i.fa-brands.fa-telegram(aria-hidden="true")
-        p  
-          a(href='https://t.me/unibox', target='_blank') t.me/unibox
+main#main 
+  //- .movie 
+  //-   img(src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2luZW1hfGVufDB8fDB8fHww', alt='')
+  //-   .movie-info
+  //-     h3 Movie Title
+  //-     span.green 9.8
+    
+  //-   .overview 
+  //-     h3 Overview 
+  //-     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae repellendus error itaque eveniet reprehenderit natus quibusdam inventore officiis facilis voluptas.
+
+.paginate 
+  .controls#prev 
+    <i class="fa-solid fa-angles-left"></i>
+  ul 
+    li.highlight: a 1
+    li: a 2
+    li: a 3
+    li: a 4
+    li: a 5
+  .controls#next 
+    <i class="fa-solid fa-angles-right"></i>  
+footer 
+  .about
+    p By unibox - 2024
+    .social
+      i.fa-brands.fa-telegram(aria-hidden="true")
+      p  
+        a(href='https://t.me/unibox', target='_blank') t.me/unibox

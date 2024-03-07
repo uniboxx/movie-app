@@ -2,8 +2,9 @@ const mainEl = document.querySelector(`#main`);
 const form = document.querySelector(`#form`);
 const search = document.querySelector(`#search`);
 const pagesEl = document.querySelector(`.paginate`);
-
-console.log(import.meta.env.VITE_API_KEY);
+const pages = document.querySelectorAll(`.paginate ul li`);
+const prev = document.querySelector(`#prev`);
+const next = document.querySelector(`#next`);
 
 const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${
   import.meta.env.VITE_API_KEY
@@ -12,7 +13,33 @@ const IMAGE_PATH = `https://image.tmdb.org/t/p/w300`;
 const SEARCH_URL = API_URL.replace('discover', 'search') + '&query=';
 
 let currentUrl = API_URL;
-let page;
+let page = 1;
+
+function highlight(page) {
+  pages.forEach(el => {
+    el.classList.remove('highlight');
+  });
+  pages[page - 1].classList.add('highlight');
+}
+
+next.addEventListener('click', e => {
+  if (page === 5) return;
+  page++;
+  goToPage(page);
+});
+
+prev.addEventListener('click', e => {
+  if (page === 1) return;
+  page--;
+  goToPage(page);
+});
+
+function goToPage(page) {
+  currentUrl = currentUrl.replace(/page=\d+/, `page=${page}`);
+  highlight(page);
+  getMovies(currentUrl);
+}
+
 //^ Get initial movies
 getMovies(currentUrl);
 
@@ -25,7 +52,7 @@ async function getMovies(url) {
       mainEl.innerHTML = `<h1 style='color: #fff;font-size: 40px;'>No results found!</h1>`;
       return;
     }
-
+    mainEl.innerHTML = '';
     // const movie = results[0];
     results.forEach(movie => {
       const movieEl = document.createElement('div');
@@ -39,7 +66,7 @@ async function getMovies(url) {
         imgEl = document.createElement('p');
         imgEl.textContent = 'Immagine non disponibile ⚠️';
         imgEl.style.margin = '0 0 6px';
-        imgEl.style.height = '450px';
+        imgEl.style.height = '375px';
         imgEl.style.textAlign = 'center';
         imgEl.style.padding = '200px 10px';
         imgEl.style.fontSize = '30px';
@@ -98,9 +125,9 @@ form.addEventListener('submit', async e => {
 });
 
 pagesEl?.addEventListener('click', e => {
-  page = e.target.textContent;
-  currentUrl = currentUrl.replace(/page=\d+/, `page=${page}`);
-  console.log(currentUrl);
-  mainEl.innerHTML = '';
-  getMovies(currentUrl);
+  const pageEl = e.target.closest('LI');
+  if (pageEl) {
+    page = +pageEl.textContent;
+    goToPage(page);
+  }
 });
