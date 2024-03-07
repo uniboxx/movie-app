@@ -1,5 +1,10 @@
 @import 'base' 
-  
+
+.container
+  width 100%
+  @media screen and (min-width 'mobile')
+    width 100%
+
 header
   padding 1rem
   display flex
@@ -7,21 +12,24 @@ header
   align-items center
   background-color secondary-color
 
+
   ul
     margin 0 40px
     padding 0
     list-style none
+    font-size 24px
     li a 
       text-decoration none
       color #fff
-      font-size 24px
       cursor pointer
       &:hover
         color #aaa
+    @media screen and (max-width phone)
+      margin 10px
+      font-size 30px
 
   .search
-    display inline-block
-    width 250px
+    max-width 250px
     background-color transparent
     bottom 2px solid primary-color
     border-radius 50px
@@ -29,15 +37,12 @@ header
     font-size 1rem
     padding 0.5rem 1rem
     color #fff
+    width: 100%
     &::placeholder
       color #7378c5
     &:focus
       outline none
       background-color primary-color
-
-    @media screen and (max-width: phone)
-      background-color #fff
-      max-width 150px
 
 main
   display flex
