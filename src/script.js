@@ -7,6 +7,9 @@ const prev = document.querySelector(`#prev`);
 const next = document.querySelector(`#next`);
 const controls = document.querySelectorAll(`.button`);
 const menuEls = document.querySelectorAll(`#menu li`);
+const flagIt = document.querySelector(`#flag-it`);
+const flagDe = document.querySelector(`#flag-de`);
+const languages = document.querySelector(`.languages`);
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -14,10 +17,20 @@ const urlParams = new URLSearchParams(queryString);
 console.log(urlParams);
 
 let resource = urlParams.get('resource') || 'movie';
+let language = localStorage.language || 'it';
+let region = localStorage.region || 'italy';
+
+languages.addEventListener('click', e => {
+  if (e.target.tagName === 'IMG') {
+    localStorage.language = e.target.dataset.language;
+    localStorage.region = e.target.dataset.region;
+    location.reload(true);
+  }
+});
 
 const API_URL = `https://api.themoviedb.org/3/discover/${resource}?api_key=${
   import.meta.env.VITE_API_KEY
-}&language=it&page=1/?resource=movie`;
+}&language=${language}&region=${region}&page=1/?resource=movie`;
 
 const IMAGE_PATH = `https://image.tmdb.org/t/p/w300`;
 const SEARCH_URL = API_URL.replace('discover', 'search') + '&query=';

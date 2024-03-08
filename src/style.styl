@@ -3,7 +3,6 @@
 header
   padding 1rem
   display flex
-  flex-direction column
   justify-content space-between
   align-items center
   background-color secondary-color
@@ -13,24 +12,18 @@ header
 
 
   #menu
-    width 100%
     display flex
-    justify-content center
-    margin 0 40px
-    margin-bottom 1rem
+    margin 0 
     padding 0
     list-style none
-    font-size 24px
+    font-size 1.2rem
     @media screen and (min-width tablet)
       margin-bottom 0
       width auto
 
     li 
-      margin 0 0 0 0
       padding 5px 10px
       border-radius 10px
-      &:first-child
-        margin-right 1rem
       &.high
         background-color high-color
       a 
@@ -39,9 +32,22 @@ header
         cursor pointer
         &:hover
           color #aaa
-    @media screen and (max-width phone)
-      margin 10px
-      font-size 30px
+      @media screen and (min-width mobile)
+        margin 10px
+        font-size 30px
+
+  .languages 
+    text-align end
+    @media screen and (min-width mobile)
+      flex 1
+      margin-right 10px
+
+    img
+      margin 0 10px
+      width 30px
+      cursor pointer
+      @media screen and (min-width mobile)
+        width 50px
 
   .search
     max-width 250px
