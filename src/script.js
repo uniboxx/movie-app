@@ -17,8 +17,9 @@ const urlParams = new URLSearchParams(queryString);
 console.log(urlParams);
 
 let resource = urlParams.get('resource') || 'movie';
-let language = localStorage.language || 'it';
-let region = localStorage.region || 'italy';
+let language = localStorage.language || 'it-IT';
+let region = localStorage.region || 'IT';
+let load, notFound, notAvailable, searching;
 
 languages.addEventListener('click', e => {
   if (e.target.tagName === 'IMG') {
@@ -84,7 +85,33 @@ function goToPage(page) {
 }
 
 //^ Get initial movies
-displayMsg('Sto caricando....');
+switch (localStorage.language) {
+  case 'it-IT':
+    load = 'Sto caricando ...';
+    notFound = 'Non sono stati trovati risultati!';
+    notAvailable = 'Immagine non disponibile ⚠️';
+    searching = 'Ricerca in corso ...';
+    break;
+  case 'en-GB':
+    load = 'I am loading ...';
+    notFound = 'No results were found!';
+    notAvailable = 'Image not available ⚠️';
+    searching = 'Search in progress ...';
+    break;
+  case 'es-ES':
+    load = 'Estoy cargando ...';
+    notFound = 'No se han encontrado resultados!';
+    notAvailable = 'Imagen no disponible ⚠️';
+    searching = 'Búsqueda en curso ...';
+    break;
+  case 'de-DE':
+    load = 'Ich lade gerade ...';
+    notFound = 'Es wurden keine Ergebnisse gefunden!';
+    notAvailable = 'Bild nicht verfügbar ⚠️';
+    searching = 'Laufende Suche ...';
+    break;
+}
+
 getMedia(currentUrl, nextUrl);
 
 //^ GET MEDIA
@@ -101,7 +128,7 @@ async function getMedia(url, nextUrl) {
       next?.setAttribute('disabled', '');
     }
     if (!results[0]) {
-      displayMsg(`Non sono stati trovati risultati!`);
+      displayMsg(notFound);
       return;
     }
     // const movie = results[0];
@@ -117,7 +144,7 @@ async function getMedia(url, nextUrl) {
         imgEl.alt = `Poster image of the movie: ${movie.title}`;
       } else {
         imgEl = document.createElement('p');
-        imgEl.textContent = 'Immagine non disponibile ⚠️';
+        imgEl.textContent = notAvailable;
         imgEl.style.margin = '0 0 6px';
         imgEl.style.height = '375px';
         imgEl.style.textAlign = 'center';
@@ -178,7 +205,7 @@ form.addEventListener('submit', e => {
     page = 1;
     currentUrl = `${SEARCH_URL}${query}`;
     console.log(currentUrl);
-    displayMsg(`Ricerca in corso...`);
+    displayMsg(searching);
   }
   goToPage(page);
 });
