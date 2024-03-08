@@ -37,13 +37,17 @@ header
         font-size 30px
 
   .languages 
-    text-align end
+    display grid
+    grid-template-columns repeat(2,1fr)
     @media screen and (min-width mobile)
+      display flex
       flex 1
+      justify-content end
       margin-right 10px
 
+
     img
-      margin 0 10px
+      margin 5px
       width 30px
       cursor pointer
       @media screen and (min-width mobile)
